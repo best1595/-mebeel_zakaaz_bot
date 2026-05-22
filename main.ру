@@ -88,7 +88,7 @@ def send_lead(message):
     except Exception as e:
         print(f"Error sending to admin: {e}")
 
-    bot.send_message(chat_id, "Спасибо! Мы свяжемся с вами в ближайшее время 😊")
+    bot.send_message(chat_id, "Спасибо! Мы свяжемся с вами в ближайшее время ")
     del user_data[chat_id]
 
 bot.infinity_polling()
