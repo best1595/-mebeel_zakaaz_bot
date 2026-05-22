@@ -1,21 +1,17 @@
 import telebot
 from telebot import types
-TOKEN = "8610452108:AAEa5TwM-Lydr526Pmb98nhVWSJ-uBenL80"
+
+TOKEN = "8610452108:AAEa5TwM-Lydr526P"
 bot = telebot.TeleBot(TOKEN)
 
-# Маълумот юбориладиган админ (сизнинг) username'ингиз
 ADMIN_USERNAME = "@Master_best19"
-
-# Фойдаланувчилар маълумотларини вақтинча сақлаш учун луғат
 user_data = {}
 
-# Ботга /start буйруғи берилганда
 @bot.message_handler(commands=['start'])
 def start(message):
     chat_id = message.chat.id
     user_data[chat_id] = {}
     
-    # 1. Форма сўраш
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     markup.add("Круглый", "Квадратный", "Прямоугольный")
     
@@ -26,7 +22,6 @@ def get_forma(message):
     chat_id = message.chat.id
     user_data[chat_id]['forma'] = message.text
     
-    # 2. Стиль сўраш
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     markup.add("Классика", "Модерн", "Лофт")
     
@@ -37,7 +32,6 @@ def get_style(message):
     chat_id = message.chat.id
     user_data[chat_id]['style'] = message.text
     
-    # 3. Цвет сўраш
     bot.send_message(chat_id, "🖌 Рангни (Цвет) ёзинг:", reply_markup=types.ReplyKeyboardRemove())
     bot.register_next_step_handler(message, get_color)
 
@@ -45,7 +39,6 @@ def get_color(message):
     chat_id = message.chat.id
     user_data[chat_id]['color'] = message.text
     
-    # 4. Площадь сўраш
     bot.send_message(chat_id, "📐 Майдонни (Площадь) ёзинг:")
     bot.register_next_step_handler(message, get_area)
 
@@ -53,7 +46,6 @@ def get_area(message):
     chat_id = message.chat.id
     user_data[chat_id]['area'] = message.text
     
-    # 5. Размер сўраш
     bot.send_message(chat_id, "📏 Ўлчамни (Размер) ёзинг:")
     bot.register_next_step_handler(message, get_size)
 
@@ -61,14 +53,12 @@ def get_size(message):
     chat_id = message.chat.id
     user_data[chat_id]['size'] = message.text
     
-    # 6. Бюджет сўраш
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     markup.add("Эконом", "Стандарт", "Премиум")
     
     bot.send_message(chat_id, "💰 Бюджетингизни танланг:", reply_markup=markup)
     bot.register_next_step_handler(message, get_budget)
 
-# Бюджет танлангандан кейин Исм сўраш босқичи
 def get_budget(message):
     chat_id = message.chat.id
     user_data[chat_id]['budget'] = message.text
@@ -76,7 +66,6 @@ def get_budget(message):
     bot.send_message(chat_id, "👤 Илтимос, исмингизни ёзинг:", reply_markup=types.ReplyKeyboardRemove())
     bot.register_next_step_handler(message, send_lead)
 
-# Исмни олиш ва маълумотларни сизга юбориш
 def send_lead(message):
     chat_id = message.chat.id
     user_data[chat_id]['name'] = message.text
@@ -97,7 +86,7 @@ def send_lead(message):
     try:
         bot.send_message(ADMIN_USERNAME, report_text)
     except Exception as e:
-        print(f"Хатолик: {e}")
+        print(f"Error sending to admin: {e}")
 
     bot.send_message(chat_id, "Спасибо! Мы свяжемся с вами в ближайшее время 😊")
     del user_data[chat_id]
